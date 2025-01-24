@@ -196,7 +196,7 @@ async def get_complete_data(s):
     protocol = s.get('protocol', 's2k')  # Протокол по умолчанию 's2k'
 
     # Получение данных подтверждения с использованием AccountManager
-    data = await AccountManager('menhhhera@gmail.com').generate_evidence_message({
+    data = await AccountManager('email@gmail.com').generate_evidence_message({
         'iterations': iterations,
         'serverPublicValue': server_public_value,
         'salt': salt,
