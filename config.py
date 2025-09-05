@@ -34,6 +34,7 @@ EMAIL_MINUTES_FOR_WAITING_CODE = 1.00
 EMAIL_USE_MY = ''
 EMAIL_SELF_ENTER_EMAIL = False
 EMAIL_SELF_ENTER_CODE = False
+EMAIL_COOKIES_PATH = './gmail_cookies'  # Путь к папке с cookies файлами Gmail
 # EMAIL
 
 # Other

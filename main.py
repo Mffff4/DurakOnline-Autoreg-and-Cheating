@@ -20,12 +20,24 @@ from utils import solve_captcha_with_xevil, get_enctypted_a, get_complete_data, 
 logging.getLogger('asyncio').setLevel(logging.CRITICAL)
 
 
-def get_txt_files(directory, shuffle=False):
+def get_txt_files(directory: str, shuffle: bool = False) -> list[str]:
+    """Получить список .txt файлов из указанной директории."""
     txt_files = []
-    for file in os.listdir(directory):
-        if file.endswith(".txt"):
-            txt_files.append(os.path.join(directory, file))
-    return random.shuffle(txt_files) if shuffle else txt_files
+    try:
+        for file in os.listdir(directory):
+            if file.endswith(".txt"):
+                txt_files.append(os.path.join(directory, file))
+    except FileNotFoundError:
+        logger.error(f'Директория не найдена: {directory}')
+        return []
+    except PermissionError:
+        logger.error(f'Нет доступа к директории: {directory}')
+        return []
+    
+    if shuffle:
+        random.shuffle(txt_files)
+        return txt_files
+    return txt_files
 
 
 def get_number(smshub: SMSHubApi):
@@ -74,7 +86,13 @@ def main():
 
     logger.info('Начинаю делать магию...')
 
-    all_cookies_files = get_txt_files(r'C:\Users\Admin\Desktop\Gmail Cookies', shuffle=False)
+    # Проверяем существование папки с cookies
+    if not os.path.exists(config.EMAIL_COOKIES_PATH):
+        logger.error(f'Папка с cookies не найдена: {config.EMAIL_COOKIES_PATH}')
+        logger.info('Создайте папку с cookies файлами Gmail или измените путь в config.py')
+        return
+
+    all_cookies_files = get_txt_files(config.EMAIL_COOKIES_PATH, shuffle=config.SHUFFLE_COOKIES)
     for cookies_file in all_cookies_files:
         if config.EMAIL_USE_ONLY_GMAIL_DOMAINS and '@gmail.com' not in cookies_file:
             continue
